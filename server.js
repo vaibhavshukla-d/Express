@@ -16,6 +16,8 @@ app.post("/api", async (req, resp) => {
       method: "POST",
       body: JSON.stringify(userInput),
       headers: {
+        Authorization:
+          "CLMAuth 1319e401ed835e68c58992edc1cec98d18a2d4c55498aaf9a52116ae168f4011:1697282448:79d75114d25c4bfeb59bb7477c32067c",
         "Content-Type": "application/json",
       },
     });
