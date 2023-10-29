@@ -1,5 +1,5 @@
 const express = require("express");
-
+const axios = require("axios"); // Import axios
 const app = express();
 const port = 4000;
 const crypto = require("crypto");
@@ -36,16 +36,18 @@ function encrypt(text) {
 
 app.post("/api", async (req, resp) => {
   const BASE_API_URL = "https://csblrqa.brnetsaas.com:2443/CoreAPI/CLM";
-  console.log("req.body", req.body);
 
   try {
     const userInput = req.body;
+    console.log(userInput);
 
     if (userInput.Method === "AuthenticateLogin") {
       // Encrypt the password
       userInput.Password = encrypt(userInput.Password);
       console.log(userInput);
     }
+
+    console.log(userInput);
 
     const response = await fetch(BASE_API_URL, {
       method: "POST",
@@ -56,6 +58,8 @@ app.post("/api", async (req, resp) => {
         "Content-Type": "application/json",
       },
     });
+
+    console.log("data", data);
 
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`);
