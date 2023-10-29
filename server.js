@@ -4,8 +4,10 @@ const app = express();
 const port = 4000;
 const crypto = require("crypto");
 const securitykey = "706b889da35c4992b71f439d3d70f19a";
+const cors = require("cors");
 
 app.use(express.json());
+app.use(cors());
 
 function encrypt(text) {
   var key = securitykey;
