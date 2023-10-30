@@ -45,14 +45,16 @@ app.post("/api", async (req, resp) => {
 
   try {
     let userInput = req.body;
+    console.log(userInput);
+    if (userInput.Method === "AuthenticateLogin") {
+      const encryptedData = req.body.StringData;
 
-    const encryptedData = req.body.StringData;
+      const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
 
-    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
-    const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-
-    console.log(decryptedData);
-    // userInput = JSON.parse(decryptedData);
+      console.log(decryptedData);
+      // userInput = JSON.parse(decryptedData);
+    }
 
     if (userInput.Method === "AuthenticateLogin") {
       userInput = JSON.parse(decryptedData);
