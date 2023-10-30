@@ -54,14 +54,12 @@ app.post("/api", async (req, resp) => {
 
       console.log(decryptedData);
       // userInput = JSON.parse(decryptedData);
-    }
-
-    if (userInput.Method === "AuthenticateLogin") {
       userInput = JSON.parse(decryptedData);
       // Encrypt the password
       userInput.Password = encrypt(userInput.Password);
       console.log(userInput);
     }
+
 
     const response = await fetch(BASE_API_URL, {
       method: "POST",
