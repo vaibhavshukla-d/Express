@@ -4,7 +4,10 @@ const app = express();
 const port = 4000;
 const crypto = require("crypto");
 const securitykey = "706b889da35c4992b71f439d3d70f19a";
+const secretKey = "706b889da35c4992b71f439d3d70f19a";
+
 const cors = require("cors");
+const CryptoJS = require("crypto-js");
 
 app.use(express.json());
 app.use(cors());
@@ -41,9 +44,18 @@ app.post("/api", async (req, resp) => {
   console.log("req.body", req.body);
 
   try {
-    const userInput = req.body;
+    let userInput = req.body;
+
+    const encryptedData = req.body.StringData;
+
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+    const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+
+    console.log(decryptedData);
+    // userInput = JSON.parse(decryptedData);
 
     if (userInput.Method === "AuthenticateLogin") {
+      userInput = JSON.parse(decryptedData);
       // Encrypt the password
       userInput.Password = encrypt(userInput.Password);
       console.log(userInput);
@@ -64,6 +76,20 @@ app.post("/api", async (req, resp) => {
     }
 
     const data = await response.json();
+
+    if (userInput.Method === "AuthenticateLogin") {
+      // Encrypt the response data
+      const responseData = data;
+      const responseString = JSON.stringify(responseData);
+      const encryptedResponse = CryptoJS.AES.encrypt(
+        responseString,
+        securitykey
+      ).toString();
+
+      // Return the encrypted response
+      const encryptedDataResponse = { StringData: encryptedResponse };
+      return resp.json(encryptedDataResponse);
+    }
 
     console.log("data", data);
 
